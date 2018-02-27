@@ -1,0 +1,13 @@
+{
+  "name": "team-pomodoro-service",
+  "version": "0.0.1",
+  "private": true,
+  "description": "",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "4.16.2"
+  }
+}
