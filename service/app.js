@@ -12,24 +12,10 @@ app.get('/api/pomodoros', (req, res) => {
   res.send(pomodoros);
 });
 
-function validateBody (req, res) {
-  if (!req.body.name) {
-    res.status(500).send("name not given");
-    return false;
-  }
-
-  return true;
-}
-
 app.put('/api/pomodoro', (req, res) => {
   if (!validateBody(req, res)) return;
 
-  const pomodoro = pomodoros.find(x => x.name === req.body.name);
-  
-  if (pomodoro !== undefined) {
-    const indexOfPomodoro = pomodoros.indexOf(pomodoro);
-    pomodoros.splice(indexOfPomodoro, 1);
-  }
+  tryRemovePomodoro(req.body.name);
 
   pomodoros.push({
     name: req.body.name,
@@ -42,17 +28,37 @@ app.put('/api/pomodoro', (req, res) => {
 app.delete('/api/pomodoro', (req, res) => {
   if (!validateBody(req, res)) return;
 
-  const pomodoro = pomodoros.find(x => x.name === req.body.name);
+  const wasRemoved = tryRemovePomodoro(req.body.name);
+  
+  if (wasRemoved) {
+    res.sendStatus(200);
+  } else {
+    res.status(500).send("pomodoro not found");
+  }
+});
+
+app.listen(app.get('port'));
+
+// **************** Helpers **************** //
+
+function validateBody (req, res) {
+  if (!req.body.name) {
+    res.status(500).send("name not given");
+    return false;
+  }
+
+  return true;
+}
+
+function tryRemovePomodoro(name) {
+  const pomodoro = pomodoros.find(x => x.name === name);
   
   if (pomodoro !== undefined) {
     const indexOfPomodoro = pomodoros.indexOf(pomodoro);
     pomodoros.splice(indexOfPomodoro, 1);
-  } else {
-    res.status(500).send("pomodoro not found");
-    return;
+
+    return true;
   }
 
-  res.sendStatus(200);
-});
-
-app.listen(app.get('port'));
+  return false;
+}
