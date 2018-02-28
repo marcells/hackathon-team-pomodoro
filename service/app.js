@@ -4,7 +4,7 @@ const app = express();
 
 const pomodoros = [];
 
-app.use(bodyParser);
+app.use(bodyParser.json());
 
 app.set('port', process.env.PORT || 3000);
 
@@ -12,11 +12,23 @@ app.get('/api/pomodoros', (req, res) => {
   res.send(pomodoros);
 });
 
-app.put('/api/pomodoro', (req, res) => {
-  console.log(req.body);
+function validateBody (req, res) {
   if (!req.body.name) {
     res.status(500).send("name not given");
-    return;
+    return false;
+  }
+
+  return true;
+}
+
+app.put('/api/pomodoro', (req, res) => {
+  if (!validateBody(req, res)) return;
+
+  const pomodoro = pomodoros.find(x => x.name === req.body.name);
+  
+  if (pomodoro !== undefined) {
+    const indexOfPomodoro = pomodoros.indexOf(pomodoro);
+    pomodoros.splice(indexOfPomodoro, 1);
   }
 
   pomodoros.push({
@@ -24,14 +36,11 @@ app.put('/api/pomodoro', (req, res) => {
     time: new Date()
   });
 
-  res.send(200);
+  res.sendStatus(200);
 });
 
 app.delete('/api/pomodoro', (req, res) => {
-  if (!req.body.name) {
-    res.status(500).send("name not given");
-    return;
-  }
+  if (!validateBody(req, res)) return;
 
   const pomodoro = pomodoros.find(x => x.name === req.body.name);
   
@@ -43,7 +52,7 @@ app.delete('/api/pomodoro', (req, res) => {
     return;
   }
 
-  res.send(200);
+  res.sendStatus(200);
 });
 
 app.listen(app.get('port'));
