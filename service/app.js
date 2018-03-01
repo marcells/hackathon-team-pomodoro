@@ -42,8 +42,22 @@ app.listen(app.get('port'));
 // **************** Helpers **************** //
 
 function validateBody (req, res) {
+  const ip = req.connection.remoteAddress;
+
+  console.log(ip);
+  if (ip === '::ffff:10.110.3.7') {
+    res.status(500).send("blocked!");
+    return false;
+  }
+
   if (!req.body.name) {
     res.status(500).send("name not given");
+    return false;
+  }
+  
+  if (req.body.name.length > 255) {
+    
+    res.status(500).send("fuck ya! too long!");
     return false;
   }
 
