@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, FlatList, Text } from 'react-native';
 import moment from 'moment';
 import axios from 'axios';
+import server from '../serverConfig';
 
 const Entry = props => (
   <View style={styles.item}>
@@ -18,7 +19,7 @@ export default class Pomodoros extends React.Component {
   }
 
   async _loadPomodoros () {
-    const response = await axios.get('http://vc024.vescon.com:3000/api/pomodoros');
+    const response = await axios.get(`${server}/api/pomodoros`);
     const pomodoros = response.data.map(x => ({ key: x.name, name: x.name, time: x.time }));
 
     this.setState({ pomodoros });

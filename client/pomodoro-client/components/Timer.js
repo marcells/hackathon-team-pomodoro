@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StyleSheet, View, Text, Button, Animated } from 'react-native';
 import moment from 'moment';
 import axios from 'axios';
+import server from '../serverConfig';
 
 const formatTime = (duration = moment.duration()) => moment.utc(duration).format('mm:ss');
 
@@ -13,12 +14,13 @@ export default class Timer extends React.Component {
       buttonEnabeled: true,
       buttonText: 'Start',
       startTime: null,
-      currentDurationText: formatTime()
+      currentDurationText: formatTime(),
+      backgroundColor: new Animated.Value(0)
     };
   }
 
   async componentDidMount () {
-    const response = await axios.get('http://vc024.vescon.com:3000/api/pomodoros');
+    const response = await axios.get(`${server}/api/pomodoros`);
 
     if (this._isUnmounted) {
       return;
@@ -31,8 +33,15 @@ export default class Timer extends React.Component {
         buttonEnabeled: true,
         buttonText: 'Stop',
         startTime: myPomodoro.time,
-        currentDurationText: formatTime(moment().diff(myPomodoro.time))
+        currentDurationText: formatTime(moment().diff(myPomodoro.time)),
+        backgroundColor: this.state.backgroundColor
       });
+
+      Animated.timing(this.state.backgroundColor, {
+        delay: 0,
+        duration: 150,
+        toValue: 1
+      }).start();
 
       this._enableTimer();
     }
@@ -53,7 +62,8 @@ export default class Timer extends React.Component {
         buttonEnabeled: this.state.buttonText,
         buttonText: this.state.buttonText,
         startTime: this.state.startTime,
-        currentDurationText: formatTime(moment().diff(this.state.startTime))
+        currentDurationText: formatTime(moment().diff(this.state.startTime)),
+        backgroundColor: this.state.backgroundColor
       });
     }, 1000);
   }
@@ -67,10 +77,17 @@ export default class Timer extends React.Component {
         buttonEnabeled: false,
         buttonText: 'Start',
         startTime: null,
-        currentDurationText: formatTime()
+        currentDurationText: formatTime(),
+        backgroundColor: this.state.backgroundColor
       });
 
-      await axios.delete('http://vc024.vescon.com:3000/api/pomodoro', {
+      Animated.timing(this.state.backgroundColor, {
+        delay: 0,
+        duration: 150,
+        toValue: 0
+      }).start();
+
+      await axios.delete(`${server}/api/pomodoro`, {
         data:  {
           name: this.props.name
         }});
@@ -79,7 +96,8 @@ export default class Timer extends React.Component {
         buttonEnabeled: true,
         buttonText: this.state.buttonText,
         startTime: this.state.startTime,
-        currentDurationText: this.state.currentDurationText
+        currentDurationText: this.state.currentDurationText,
+        backgroundColor: this.state.backgroundColor
       });
 
       return;
@@ -91,10 +109,17 @@ export default class Timer extends React.Component {
       buttonEnabeled: false,
       buttonText: 'Stop',
       startTime: moment(),
-      currentDurationText: formatTime()
+      currentDurationText: formatTime(),
+      backgroundColor: this.state.backgroundColor
     });
 
-    await axios.put('http://vc024.vescon.com:3000/api/pomodoro', {
+    Animated.timing(this.state.backgroundColor, {
+      delay: 0,
+      duration: 150,
+      toValue: 1
+    }).start();
+
+    await axios.put(`${server}/api/pomodoro`, {
       name: this.props.name
     });
 
@@ -102,16 +127,22 @@ export default class Timer extends React.Component {
       buttonEnabeled: true,
       buttonText: this.state.buttonText,
       startTime: this.state.startTime,
-      currentDurationText: this.state.currentDurationText
+      currentDurationText: this.state.currentDurationText,
+      backgroundColor: this.state.backgroundColor
     });
   }
 
   render() {
+    const backgroundColor = this.state.backgroundColor.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['gray', 'red']
+    });
+
     return (
-      <View style={styles.container}>
+      <Animated.View style={[styles.container, { backgroundColor }]}>
         <Text style={styles.timer}>{this.state.currentDurationText}</Text>
         <Button title={this.state.buttonText} onPress={() => this._startOrStopTimer()} disabled={!this.state.buttonEnabeled} />
-      </View>
+      </Animated.View>
     );
   }
 }
