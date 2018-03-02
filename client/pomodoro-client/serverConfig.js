@@ -1,1 +1,1 @@
-export default "http://192.168.0.73:3000";
+export default "https://team-pomodoro.azurewebsites.net";
