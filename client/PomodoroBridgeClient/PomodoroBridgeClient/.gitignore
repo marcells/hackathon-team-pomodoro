@@ -1,0 +1,68 @@
+# Visual Studio Code
+.vscode/
+
+# ReSharper
+/Source/Vescon.So/_ReSharper*/
+/Tools/AssemblyVersionModifier/_ReSharper*/
+
+# StyleCop
+/Source/Vescon.So/Vescon.So*.sln.StyleCop
+StyleCopViolations.xml
+
+# IDE Settings (Visual Studio)
+/Source/Vescon.So/.vs/
+/Source/Vescon.So/.settings/
+/Source/Vescon.So/Visual Studio 2013/
+*.suo
+*.user
+
+# IDE Settings (VS Code)
+/Source/Vescon.So/.vscode/
+
+# Visual Studio Extensions
+/Source/Vescon.So/Vescon.So*.vsext*
+/Source/Vescon.So/Vescon.So.favdoc
+/Source/Vescon.So/Vescon.So.Client.Presentation.Controls/imemfyxn.tmp_proj
+
+# IDE Settings (Rider)
+/Source/Vescon.So/.idea/
+/Source/Vescon.So/Vescon.So.sln.iml
+/Tools/DatabaseQueryer/.idea/
+
+# IDE Settings (vscode)
+/Source/Deployment/Merging/.vscode/launch.json
+/Source/Deployment/Build/.vscode/launch.json
+
+/Tools/Vescon.So.Scripting.Customizing/_ReSharper*/
+/Tools/Vescon.So.Scripting.Customizing/packages/
+/Tools/Vescon.So.Scripting.Customizing/.idea/
+!/Tools/Vescon.So.Scripting.Customizing/packages/repositories.config
+/Tools/SharedBinaries/
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+*.log
+*.log.[0-9]*
+/Source/FitNesse/Wiki/FitNesseRoot/files/testResults
+/$tf/properties.tf1
+/$tf/pendingchanges.tfb
+/$tf/pendingchanges.tf1
+/$tf/localversion.tfb
+/$tf/localversion.tf1
+
+# Coded UI test results
+/Source/Vescon.So/TestResults
+/Source/Vescon.So/Vescon.So.Client.~slp
+/Source/Vescon.So/Vescon.So.Client.xls
+/Source/Vescon.So/Vescon.So.Client.sds
+/Tools/Vescon.So.Scripting.Customizing/.vs/
+/.vs/
