@@ -21,21 +21,6 @@ app.intent('ReadUserName', (conv, {version}) => {
   }));
 });
 
-async function onlyExecuteIfNamed(conv, action) {
-  const name = userMaps[conv.user.id];
-
-  if (!name) {
-    conv.ask(new SimpleResponse({
-      speech: `Bitte verrate mir zuerst deinen Namen.`,
-      text: `Bitte verrate mir zuerst deinen Namen.`
-    }));
-
-    return;
-  }
-
-  await action(name);
-}
-
 app.intent('StartPomodoro', async (conv, {version}) => {
   await onlyExecuteIfNamed(conv, async name => {
     await axios.put(`${baseUrl}/pomodoro`, { name });
@@ -92,5 +77,20 @@ app.intent('GetPomodoros', async (conv, {version}) => {
     text: output
   }));
 });
+
+async function onlyExecuteIfNamed(conv, action) {
+  const name = userMaps[conv.user.id];
+
+  if (!name) {
+    conv.ask(new SimpleResponse({
+      speech: `Bitte verrate mir zuerst deinen Namen.`,
+      text: `Bitte verrate mir zuerst deinen Namen.`
+    }));
+
+    return;
+  }
+
+  await action(name);
+}
 
 express().use(bodyParser.json(), app).listen(3000)
